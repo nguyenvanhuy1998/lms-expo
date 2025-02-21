@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
+    Modal,
     Platform,
     Pressable,
     StyleSheet,
@@ -18,6 +19,7 @@ import {
 } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Defs, RadialGradient, Rect, Stop, Svg } from "react-native-svg";
+import AuthModal from "../auth/auth.modal";
 // import AuthModal from "../auth/auth.modal";
 
 export default function Slide({
@@ -40,7 +42,7 @@ export default function Slide({
             setIndex(index + 1);
         }
     };
-
+    console.log(modalVisible);
     return (
         <>
             <Svg style={StyleSheet.absoluteFill}>
@@ -143,21 +145,19 @@ export default function Slide({
                     />
                 </TouchableOpacity>
             )}
-            {/* <Modal
+            <Modal
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                }}
+                onRequestClose={() => setModalVisible(!modalVisible)}
             >
                 <Pressable
                     style={{ flex: 1 }}
                     onPress={() => setModalVisible(false)}
                 >
-                    <AuthModal setModalVisible={setModalVisible} />
+                    <AuthModal />
                 </Pressable>
-            </Modal> */}
+            </Modal>
         </>
     );
 }
