@@ -7,7 +7,7 @@ import {
 } from "@/themes/app.constant";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import {
     Modal,
     Platform,
@@ -20,142 +20,105 @@ import {
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Defs, RadialGradient, Rect, Stop, Svg } from "react-native-svg";
 import AuthModal from "../auth/auth.modal";
-// import AuthModal from "../auth/auth.modal";
 
-export default function Slide({
-    slide,
-    index,
-    setIndex,
-    totalSlides,
-}: {
+interface SlideProps {
     slide: onBoardingSlidesTypes;
     index: number;
     setIndex: (value: number) => void;
     totalSlides: number;
-}) {
+}
+
+const BackgroundGradient = memo(({ color }: { color: string }) => (
+    <Svg style={StyleSheet.absoluteFill}>
+        <Defs>
+            <RadialGradient id="gradient" cx="50%" cy="35%">
+                <Stop offset="0%" stopColor={color} />
+                <Stop offset="100%" stopColor={color} />
+            </RadialGradient>
+        </Defs>
+        <Rect x={0} y={0} width={WIDTH} height={HEIGHT} fill="url(#gradient)" />
+    </Svg>
+));
+
+const SlideContent = memo(({ slide }: { slide: onBoardingSlidesTypes }) => (
+    <View style={styles.container}>
+        <View>{slide.image}</View>
+        <View>
+            <View style={styles.textContainer}>
+                <Text style={styles.titleText}>{slide.title}</Text>
+                <Text style={styles.titleText}>{slide.secondTitle}</Text>
+                <Text style={styles.subtitleText}>{slide.subTitle}</Text>
+            </View>
+        </View>
+    </View>
+));
+
+const Indicators = memo(
+    ({ index, totalSlides }: { index: number; totalSlides: number }) => (
+        <View style={styles.indicatorContainer}>
+            {Array.from({ length: totalSlides }).map((_, i) => (
+                <TouchableOpacity
+                    key={i}
+                    style={[
+                        styles.indicator,
+                        i === index && styles.activeIndicator,
+                    ]}
+                />
+            ))}
+        </View>
+    )
+);
+
+const NextButton = memo(({ onPress }: { onPress: () => void }) => (
+    <LinearGradient colors={["#6D55FE", "#8976FC"]} style={styles.nextButton}>
+        <Pressable style={styles.nextButtonContent} onPress={onPress}>
+            <Text style={styles.nextButtonText}>Next</Text>
+        </Pressable>
+    </LinearGradient>
+));
+
+const ArrowButton = memo(({ onPress }: { onPress: () => void }) => (
+    <TouchableOpacity style={styles.arrowButton} onPress={onPress}>
+        <Ionicons
+            name="chevron-forward-outline"
+            size={scale(18)}
+            color="black"
+        />
+    </TouchableOpacity>
+));
+
+function Slide({ slide, index, setIndex, totalSlides }: SlideProps) {
     const [modalVisible, setModalVisible] = useState(false);
 
-    const handlePress = (index: number, setIndex: (index: number) => void) => {
+    const handlePress = useCallback(() => {
         if (index === 2) {
             setModalVisible(true);
         } else {
             setIndex(index + 1);
         }
-    };
-    console.log(modalVisible);
+    }, [index, setIndex]);
+
+    const closeModal = useCallback(() => {
+        setModalVisible(false);
+    }, []);
+
     return (
         <>
-            <Svg style={StyleSheet.absoluteFill}>
-                <Defs>
-                    <RadialGradient id="gradient" cx="50%" cy="35%">
-                        <Stop offset="0%" stopColor={slide.color} />
-                        <Stop offset="100%" stopColor={slide.color} />
-                    </RadialGradient>
-                </Defs>
-                <Rect
-                    x={0}
-                    y={0}
-                    width={WIDTH}
-                    height={HEIGHT}
-                    fill={"url(#gradient)"}
-                />
-            </Svg>
-            <View style={styles.container}>
-                <View>{slide.image}</View>
-                <View>
-                    <View
-                        style={{
-                            width: SCREEN_WIDTH * 1,
-                            paddingHorizontal: verticalScale(25),
-                        }}
-                    >
-                        <Text
-                            style={{
-                                fontSize: fontSizes.FONT30,
-                                fontWeight: "600",
-                                color: "#05030D",
-                                fontFamily: "Poppins_600SemiBold",
-                            }}
-                        >
-                            {slide.title}
-                        </Text>
-                        <Text
-                            style={{
-                                fontSize: fontSizes.FONT30,
-                                fontWeight: "600",
-                                color: "#05030D",
-                                fontFamily: "Poppins_600SemiBold",
-                            }}
-                        >
-                            {slide.secondTitle}
-                        </Text>
-                        <Text
-                            style={{
-                                paddingVertical: verticalScale(4),
-                                fontSize: fontSizes.FONT18,
-                                color: "#3E3B54",
-                                fontFamily: "Poppins_300Light",
-                            }}
-                        >
-                            {slide.subTitle}
-                        </Text>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.indicatorContainer}>
-                {Array.from({ length: totalSlides }).map((_, i) => (
-                    <TouchableOpacity
-                        key={i}
-                        style={[
-                            styles.indicator,
-                            i === index && styles.activeIndicator,
-                        ]}
-                    />
-                ))}
-            </View>
-            {/* Next Button */}
-            {index <= totalSlides - 1 && (
-                <LinearGradient
-                    colors={["#6D55FE", "#8976FC"]}
-                    style={styles.nextButton}
-                >
-                    <Pressable
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: "100%",
-                            height: "100%",
-                        }}
-                        onPress={() => handlePress(index, setIndex)}
-                    >
-                        <Text style={styles.nextButtonText}>Next</Text>
-                    </Pressable>
-                </LinearGradient>
-            )}
-            {index < totalSlides - 1 && (
-                <TouchableOpacity
-                    style={styles.arrowButton}
-                    onPress={() => handlePress(index, setIndex)}
-                >
-                    <Ionicons
-                        name="chevron-forward-outline"
-                        size={scale(18)}
-                        color="black"
-                    />
-                </TouchableOpacity>
-            )}
+            <BackgroundGradient color={slide.color} />
+            <SlideContent slide={slide} />
+            <Indicators index={index} totalSlides={totalSlides} />
+
+            {index <= totalSlides - 1 && <NextButton onPress={handlePress} />}
+            {index < totalSlides - 1 && <ArrowButton onPress={handlePress} />}
+
             <Modal
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(!modalVisible)}
+                onRequestClose={closeModal}
             >
-                <Pressable
-                    style={{ flex: 1 }}
-                    onPress={() => setModalVisible(false)}
-                >
-                    <AuthModal />
+                <Pressable style={styles.modalOverlay} onPress={closeModal}>
+                    <AuthModal setModalVisible={setModalVisible} />
                 </Pressable>
             </Modal>
         </>
@@ -168,6 +131,22 @@ const styles = StyleSheet.create({
         padding: scale(60),
         paddingTop: verticalScale(100),
         alignItems: "center",
+    },
+    textContainer: {
+        width: SCREEN_WIDTH,
+        paddingHorizontal: verticalScale(25),
+    },
+    titleText: {
+        fontSize: fontSizes.FONT30,
+        fontWeight: "600",
+        color: "#05030D",
+        fontFamily: "Poppins_600SemiBold",
+    },
+    subtitleText: {
+        paddingVertical: verticalScale(4),
+        fontSize: fontSizes.FONT18,
+        color: "#3E3B54",
+        fontFamily: "Poppins_300Light",
     },
     indicatorContainer: {
         flexDirection: "row",
@@ -200,6 +179,13 @@ const styles = StyleSheet.create({
         height: windowHeight(37),
         borderRadius: windowWidth(20),
     },
+    nextButtonContent: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+    },
     nextButtonText: {
         color: "white",
         fontSize: fontSizes.FONT22,
@@ -218,4 +204,9 @@ const styles = StyleSheet.create({
         top: Platform.OS === "ios" ? verticalScale(345) : verticalScale(385),
         transform: [{ translateY: -30 }],
     },
+    modalOverlay: {
+        flex: 1,
+    },
 });
+
+export default memo(Slide);
