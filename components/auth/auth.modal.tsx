@@ -3,88 +3,115 @@ import React from "react";
 import { BlurView } from "expo-blur";
 import { fontSizes, windowHeight, windowWidth } from "@/themes/app.constant";
 
-const AuthModal = () => {
-    const googleSignIn = () => {};
-    const handleGithubLogin = () => {};
+interface AuthModalProps {
+    setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface SocialButtonProps {
+    onPress?: () => void;
+    imageSource: any;
+    alt: string;
+}
+
+const SocialButton = ({ onPress, imageSource, alt }: SocialButtonProps) => (
+    <Pressable onPress={onPress} style={styles.socialButton}>
+        <Image
+            source={imageSource}
+            style={styles.socialIcon}
+            accessibilityLabel={alt}
+        />
+    </Pressable>
+);
+
+const AuthModal = ({ setModalVisible }: AuthModalProps) => {
+    const socialButtons = [
+        {
+            onPress: () => {
+                /* handle Google login */
+            },
+            imageSource: require("@/assets/images/onboarding/google.png"),
+            alt: "Sign in with Google",
+        },
+        {
+            onPress: () => {
+                /* handle Github login */
+            },
+            imageSource: require("@/assets/images/onboarding/github.png"),
+            alt: "Sign in with Github",
+        },
+        {
+            onPress: () => {
+                /* handle Apple login */
+            },
+            imageSource: require("@/assets/images/onboarding/apple.png"),
+            alt: "Sign in with Apple",
+        },
+    ];
+
     return (
-        <BlurView
-            style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-            }}
-        >
-            <Pressable
-                style={{
-                    width: windowWidth(420),
-                    height: windowHeight(250),
-                    backgroundColor: "white",
-                    marginHorizontal: windowWidth(50),
-                    borderRadius: 30,
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
-                <Text
-                    style={{
-                        fontSize: fontSizes.FONT35,
-                        fontFamily: "Poppins_700Bold",
-                    }}
-                >
-                    Join to Becodemy
-                </Text>
-                <Text
-                    style={{
-                        fontSize: fontSizes.FONT17,
-                        fontFamily: "Poppins_300Light",
-                        paddingTop: windowHeight(5),
-                    }}
-                >
+        <BlurView intensity={80} style={styles.container}>
+            <Pressable style={styles.modalContent}>
+                <Text style={styles.title}>Join to Becodemy</Text>
+                <Text style={styles.subtitle}>
                     It's easier than your imagination!
                 </Text>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        paddingVertical: windowHeight(10),
-                        gap: windowWidth(20),
-                    }}
-                >
-                    <Pressable onPress={googleSignIn}>
-                        <Image
-                            source={require("@/assets/images/onboarding/google.png")}
-                            style={{
-                                width: windowWidth(40),
-                                height: windowWidth(40),
-                                resizeMode: "contain",
-                            }}
-                        />
-                    </Pressable>
-                    <Pressable onPress={() => handleGithubLogin()}>
-                        <Image
-                            source={require("@/assets/images/onboarding/github.png")}
-                            style={{
-                                width: windowWidth(40),
-                                height: windowWidth(40),
-                                resizeMode: "contain",
-                            }}
-                        />
-                    </Pressable>
-                    <Pressable>
-                        <Image
-                            source={require("@/assets/images/onboarding/apple.png")}
-                            style={{
-                                width: windowWidth(40),
-                                height: windowWidth(40),
-                                resizeMode: "contain",
-                            }}
-                        />
-                    </Pressable>
+                <View style={styles.socialButtonsContainer}>
+                    {socialButtons.map((button, index) => (
+                        <SocialButton key={index} {...button} />
+                    ))}
                 </View>
             </Pressable>
         </BlurView>
     );
 };
 
-export default AuthModal;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalContent: {
+        width: windowWidth(420),
+        height: windowHeight(250),
+        backgroundColor: "white",
+        marginHorizontal: windowWidth(50),
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    title: {
+        fontSize: fontSizes.FONT35,
+        fontFamily: "Poppins_700Bold",
+        color: "#1A1A1A",
+    },
+    subtitle: {
+        fontSize: fontSizes.FONT17,
+        fontFamily: "Poppins_300Light",
+        paddingTop: windowHeight(5),
+        color: "#666666",
+    },
+    socialButtonsContainer: {
+        flexDirection: "row",
+        paddingVertical: windowHeight(10),
+        gap: windowWidth(20),
+    },
+    socialButton: {
+        padding: windowWidth(5),
+    },
+    socialIcon: {
+        width: windowWidth(40),
+        height: windowWidth(40),
+        resizeMode: "contain",
+    },
+});
 
-const styles = StyleSheet.create({});
+export default AuthModal;
