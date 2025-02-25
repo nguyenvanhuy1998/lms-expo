@@ -8,6 +8,7 @@ import {
     windowWidth,
 } from "@/themes/app.constant";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import JWT from "expo-jwt";
 
 interface AuthModalProps {
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,17 +31,60 @@ const SocialButton = ({ onPress, imageSource, alt }: SocialButtonProps) => (
 );
 
 const AuthModal = ({ setModalVisible }: AuthModalProps) => {
+    useEffect(() => {
+        configureGoogleSignIn();
+    }, []);
+    const configureGoogleSignIn = () => {
+        if (IsIOS) {
+            GoogleSignin.configure({
+                iosClientId: process.env.EXPO_PUBLIC_IOS_GOOGLE_API_KEY,
+            });
+        } else {
+            GoogleSignin.configure({
+                webClientId: process.env.EXPO_PUBLIC_ANDROID_GOOGLE_API_KEY,
+            });
+        }
+    };
+    const googleSignIn = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log(userInfo);
+            await authHandler({
+                name: userInfo.data?.user.name!,
+                email: userInfo.data?.user.email!,
+                avatar: userInfo.data?.user.photo!,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const authHandler = ({
+        name,
+        email,
+        avatar,
+    }: {
+        name: string;
+        email: string;
+        avatar: string;
+    }) => {
+        const user = {
+            name,
+            email,
+            avatar,
+        };
+        const token = JWT.encode(
+            {
+                ...user,
+            },
+            process.env.EXPO_PUBLIC_JWT_SECRET_KEY!
+        );
+        console.log(token);
+    };
+
     const socialButtons = [
         {
-            onPress: async () => {
-                try {
-                    await GoogleSignin.hasPlayServices();
-                    const userInfo = await GoogleSignin.signIn();
-                    console.log(userInfo);
-                } catch (error) {
-                    console.log(error);
-                }
-            },
+            onPress: googleSignIn,
             imageSource: require("@/assets/images/onboarding/google.png"),
             alt: "Sign in with Google",
         },
@@ -59,21 +103,7 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             alt: "Sign in with Apple",
         },
     ];
-    const configureGoogleSignIn = () => {
-        if (IsIOS) {
-            GoogleSignin.configure({
-                iosClientId: process.env.EXPO_PUBLIC_IOS_GOOGLE_API_KEY,
-            });
-        } else {
-            GoogleSignin.configure({
-                webClientId: process.env.EXPO_PUBLIC_ANDROID_GOOGLE_API_KEY,
-            });
-        }
-    };
 
-    useEffect(() => {
-        configureGoogleSignIn();
-    }, []);
     return (
         <BlurView intensity={80} style={styles.container}>
             <Pressable style={styles.modalContent}>
