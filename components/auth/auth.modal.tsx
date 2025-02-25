@@ -1,7 +1,13 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { BlurView } from "expo-blur";
-import { fontSizes, windowHeight, windowWidth } from "@/themes/app.constant";
+import {
+    fontSizes,
+    IsIOS,
+    windowHeight,
+    windowWidth,
+} from "@/themes/app.constant";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 interface AuthModalProps {
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,8 +32,14 @@ const SocialButton = ({ onPress, imageSource, alt }: SocialButtonProps) => (
 const AuthModal = ({ setModalVisible }: AuthModalProps) => {
     const socialButtons = [
         {
-            onPress: () => {
-                /* handle Google login */
+            onPress: async () => {
+                try {
+                    await GoogleSignin.hasPlayServices();
+                    const userInfo = await GoogleSignin.signIn();
+                    console.log(userInfo);
+                } catch (error) {
+                    console.log(error);
+                }
             },
             imageSource: require("@/assets/images/onboarding/google.png"),
             alt: "Sign in with Google",
@@ -47,7 +59,21 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             alt: "Sign in with Apple",
         },
     ];
+    const configureGoogleSignIn = () => {
+        if (IsIOS) {
+            GoogleSignin.configure({
+                iosClientId: process.env.EXPO_PUBLIC_IOS_GOOGLE_API_KEY,
+            });
+        } else {
+            GoogleSignin.configure({
+                webClientId: process.env.EXPO_PUBLIC_ANDROID_GOOGLE_API_KEY,
+            });
+        }
+    };
 
+    useEffect(() => {
+        configureGoogleSignIn();
+    }, []);
     return (
         <BlurView intensity={80} style={styles.container}>
             <Pressable style={styles.modalContent}>
