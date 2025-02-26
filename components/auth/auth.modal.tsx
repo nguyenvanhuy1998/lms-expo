@@ -122,7 +122,6 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             },
         });
         const userData = await userResponse.json();
-        console.log({ userData });
         await authHandler({
             name: userData.name!,
             email: userData.email!,
@@ -151,7 +150,7 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             process.env.EXPO_PUBLIC_JWT_SECRET_KEY!
         );
         const res = await axios.post(
-            `${process.env.EXPO_PUBLIC_SEVER_URI}/login`,
+            `${process.env.EXPO_PUBLIC_SERVER_URI}/login`,
             {
                 signedToken: token,
             }

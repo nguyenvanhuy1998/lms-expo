@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import prisma from "./utils/prisma.js";
 import jwt from "jsonwebtoken";
 import { sendToken } from "./utils/sendToken.js";
+import { isAuthenticated } from "./middleware/auth.js";
 
 dotenv.config();
 
@@ -17,7 +18,6 @@ app.use(
 );
 
 // User login
-
 app.post("/login", async (req, res) => {
     try {
         const { signedToken } = req.body;
@@ -46,6 +46,19 @@ app.post("/login", async (req, res) => {
                 message: "Your request is not authorized!",
             });
         }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+// Get logged in user
+app.get("/me", isAuthenticated, async (req, res) => {
+    try {
+        const user = req.user;
+        res.status(201).json({
+            success: true,
+            user,
+        });
     } catch (error) {
         console.log(error);
     }
