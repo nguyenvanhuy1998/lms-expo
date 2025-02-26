@@ -9,6 +9,9 @@ import {
 } from "@/themes/app.constant";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import JWT from "expo-jwt";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import { router } from "expo-router";
 
 interface AuthModalProps {
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -59,7 +62,7 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             console.log(error);
         }
     };
-    const authHandler = ({
+    const authHandler = async ({
         name,
         email,
         avatar,
@@ -79,7 +82,15 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             },
             process.env.EXPO_PUBLIC_JWT_SECRET_KEY!
         );
-        console.log(token);
+        const res = await axios.post(
+            `${process.env.EXPO_PUBLIC_SEVER_URI}/login`,
+            {
+                signedToken: token,
+            }
+        );
+        await SecureStore.setItemAsync("accessToken", res.data.accessToken);
+        setModalVisible(false);
+        router.push("/(tabs)");
     };
 
     const socialButtons = [
