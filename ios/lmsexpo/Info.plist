@@ -27,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>myapp</string>
+          <string>lmsexpo</string>
           <string>com.gemini.lmsexpo</string>
         </array>
       </dict>

@@ -12,6 +12,8 @@ import JWT from "expo-jwt";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
+import { useAuthRequest, makeRedirectUri } from "expo-auth-session";
+import * as WebBrowser from "expo-web-browser";
 
 interface AuthModalProps {
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,9 +36,6 @@ const SocialButton = ({ onPress, imageSource, alt }: SocialButtonProps) => (
 );
 
 const AuthModal = ({ setModalVisible }: AuthModalProps) => {
-    useEffect(() => {
-        configureGoogleSignIn();
-    }, []);
     const configureGoogleSignIn = () => {
         if (IsIOS) {
             GoogleSignin.configure({
@@ -48,11 +47,32 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             });
         }
     };
+    // github auth start
+    const githubAuthEndpoints = {
+        authorizationEndpoint: "https://github.com/login/oauth/authorize",
+        tokenEndpoint: "https://github.com/login/oauth/access_token",
+        revocationEndpoint: `https://github.com/settings/connections/applications/${process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID}`,
+    };
+    const [request, response] = useAuthRequest(
+        {
+            clientId: process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID!,
+            clientSecret: process.env.EXPO_PUBLIC_GITHUB_CLIENT_SECRET!,
+            scopes: ["identity"],
+            redirectUri: makeRedirectUri({
+                scheme: "lmsexpo",
+            }),
+        },
+        githubAuthEndpoints
+    );
+
+    useEffect(() => {
+        configureGoogleSignIn();
+    }, []);
+
     const googleSignIn = async () => {
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            console.log(userInfo);
             await authHandler({
                 name: userInfo.data?.user.name!,
                 email: userInfo.data?.user.email!,
@@ -62,6 +82,54 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             console.log(error);
         }
     };
+    const githubSignIn = async () => {
+        const result = await WebBrowser.openAuthSessionAsync(
+            request?.url!,
+            makeRedirectUri({
+                scheme: "lmsexpo",
+            })
+        );
+        if (result.type === "success" && result.url) {
+            const urlParams = new URLSearchParams(result.url.split("?")[1]);
+            const code: any = urlParams.get("code");
+            fetchAccessToken(code);
+        }
+    };
+    const fetchAccessToken = async (code: string) => {
+        const tokenResponse = await fetch(
+            "https://github.com/login/oauth/access_token",
+            {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: `client_id=${process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID}&client_secret=${process.env.EXPO_PUBLIC_GITHUB_CLIENT_SECRET}&code=${code}`,
+            }
+        );
+        const tokenData = await tokenResponse.json();
+        const access_token = tokenData.access_token;
+        if (access_token) {
+            fetchUserInfo(access_token);
+        } else {
+            console.error("Error fetching access token", tokenData);
+        }
+    };
+    const fetchUserInfo = async (access_token: string) => {
+        const userResponse = await fetch("https://api.github.com/user", {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
+            },
+        });
+        const userData = await userResponse.json();
+        console.log({ userData });
+        await authHandler({
+            name: userData.name!,
+            email: userData.email!,
+            avatar: userData.avatar_url!,
+        });
+    };
+
     const authHandler = async ({
         name,
         email,
@@ -89,6 +157,9 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             }
         );
         await SecureStore.setItemAsync("accessToken", res.data.accessToken);
+        await SecureStore.setItemAsync("name", name);
+        await SecureStore.setItemAsync("email", email);
+        await SecureStore.setItemAsync("avatar", avatar);
         setModalVisible(false);
         router.push("/(tabs)");
     };
@@ -100,9 +171,7 @@ const AuthModal = ({ setModalVisible }: AuthModalProps) => {
             alt: "Sign in with Google",
         },
         {
-            onPress: () => {
-                /* handle Github login */
-            },
+            onPress: githubSignIn,
             imageSource: require("@/assets/images/onboarding/github.png"),
             alt: "Sign in with Github",
         },

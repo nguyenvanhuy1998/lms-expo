@@ -27,6 +27,7 @@
         <data android:scheme="myapp"/>
         <data android:scheme="com.gemini.lmsexpo"/>
         <data android:scheme="exp+lms-expo"/>
+        <data android:scheme="lmsexpo"/>
       </intent-filter>
     </activity>
   </application>
