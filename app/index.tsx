@@ -9,7 +9,7 @@ export default function index() {
     useEffect(() => {
         const subscription = async () => {
             const token = SecureStore.getItem("accessToken");
-            console.log({token})
+            console.log({ token });
             setLoggedInUser(token ? true : false);
             setLoading(false);
         };
