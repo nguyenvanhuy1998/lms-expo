@@ -1,46 +1,49 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import ProfileHeader from "@/components/profile/profile.header";
+import ProfileInfo from "@/components/profile/profile.info";
+import ProfileOptions from "@/components/profile/profile.options";
+import ProfileStats from "@/components/profile/profile.stats";
 import { useTheme } from "@/context/theme.context";
-import { LinearGradient } from "expo-linear-gradient";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
-import ThemeSwitcher from "@/components/common/theme.switcher";
-import { fontSizes, IsAndroid } from "@/themes/app.constant";
+import useUser from "@/hooks/fetch/useUser";
+import useUserData from "@/hooks/useUserData";
+import { IsAndroid, IsHaveNotch, IsIPAD } from "@/themes/app.constant";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
 
 const ProfileScreen = () => {
     const { theme } = useTheme();
+    const { avatar, name, email } = useUserData();
+    const { user } = useUser();
+    const isDarkMode = theme.dark;
+
     return (
         <View
             style={[
                 styles.container,
                 {
-                    backgroundColor: theme.dark ? "#101010" : "#f5f5f5",
+                    backgroundColor: isDarkMode ? "#101010" : "#f5f5f5",
                 },
             ]}
         >
-            <LinearGradient
-                colors={
-                    theme.dark
-                        ? ["#121121", "#3c43485c", "#121121"]
-                        : ["#6248FF", "#8673FC"]
-                }
-                start={theme.dark ? { x: 1, y: 1 } : { x: 0, y: 1 }}
-                end={theme.dark ? { x: 0, y: 1 } : { x: 0, y: 0 }}
-                style={styles.header}
+            <ProfileHeader isDarkMode={isDarkMode} />
+            <View
+                style={[
+                    styles.profileContainer,
+                    {
+                        backgroundColor: theme.dark ? "#121121" : "#fff",
+                        shadowOpacity: theme.dark ? 0.12 : 0.25,
+                    },
+                ]}
             >
-                <StatusBar style="light" />
-                <SafeAreaView
-                    style={{
-                        paddingTop: IsAndroid ? verticalScale(20) : 0,
-                    }}
-                >
-                    <View style={styles.headerContent}>
-                        <Text style={styles.headerTitle}>Profile</Text>
-                        <ThemeSwitcher />
-                    </View>
-                </SafeAreaView>
-            </LinearGradient>
+                <ProfileInfo
+                    isDarkMode={isDarkMode}
+                    avatar={avatar}
+                    name={name}
+                    email={email}
+                />
+                <ProfileStats enrolledCount={user?.orders?.length || 0} />
+            </View>
+            <ProfileOptions isDarkMode={isDarkMode} />
         </View>
     );
 };
@@ -51,20 +54,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    header: {
-        height: verticalScale(180),
-        borderBottomLeftRadius: scale(20),
-        borderBottomRightRadius: scale(20),
-        padding: scale(20),
-    },
-    headerContent: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-    headerTitle: {
-        fontSize: fontSizes.FONT28,
-        color: "#fff",
-        fontFamily: "Poppins_500Medium",
+
+    profileContainer: {
+        width: scale(320),
+        backgroundColor: "#fff",
+        height: IsAndroid
+            ? verticalScale(155)
+            : !IsHaveNotch
+            ? verticalScale(175)
+            : IsIPAD
+            ? verticalScale(185)
+            : verticalScale(155),
+        marginTop: verticalScale(-80),
+        alignSelf: "center",
+        borderRadius: scale(20),
+        padding: scale(15),
+        zIndex: 10,
+        shadowColor: "#999",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
 });
