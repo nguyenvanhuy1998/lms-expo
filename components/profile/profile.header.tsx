@@ -6,16 +6,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ThemeSwitcher from "../common/theme.switcher";
 import { scale, verticalScale } from "react-native-size-matters";
 import { fontSizes, IsAndroid } from "@/themes/app.constant";
+import { useTheme } from "@/context/theme.context";
+import { Colors } from "@/constants/colors";
 
 // Component hiển thị Header
 const ProfileHeader = ({ isDarkMode }: { isDarkMode: boolean }) => {
+    const { theme } = useTheme();
     return (
         <LinearGradient
-            colors={
-                isDarkMode
-                    ? ["#121121", "#3c43485c", "#121121"]
-                    : ["#6248FF", "#8673FC"]
-            }
+            colors={theme.colors.headerGradient}
             start={isDarkMode ? { x: 1, y: 1 } : { x: 0, y: 1 }}
             end={isDarkMode ? { x: 0, y: 1 } : { x: 0, y: 0 }}
             style={styles.header}
@@ -23,7 +22,7 @@ const ProfileHeader = ({ isDarkMode }: { isDarkMode: boolean }) => {
             <StatusBar style="light" />
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.headerContent}>
-                    <Text style={styles.headerTitle}>Profile</Text>
+                    <Text style={[styles.headerTitle]}>Profile</Text>
                     <ThemeSwitcher />
                 </View>
             </SafeAreaView>
@@ -50,7 +49,7 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
         fontSize: fontSizes.FONT28,
-        color: "#fff",
         fontFamily: "Poppins_500Medium",
+        color: Colors.dark.text,
     },
 });

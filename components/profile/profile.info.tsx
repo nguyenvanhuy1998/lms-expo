@@ -3,6 +3,7 @@ import React from "react";
 import { scale, verticalScale } from "react-native-size-matters";
 import { fontSizes } from "@/themes/app.constant";
 import { useTheme } from "@/context/theme.context";
+import { Colors } from "@/constants/colors";
 // Component hiển thị Avatar + Thông tin cá nhân
 const ProfileInfo = ({
     isDarkMode,
@@ -15,6 +16,7 @@ const ProfileInfo = ({
     name: string;
     email: string;
 }) => {
+    const { theme } = useTheme();
     return (
         <View style={styles.profileHeader}>
             <Image
@@ -26,7 +28,7 @@ const ProfileInfo = ({
                     style={[
                         styles.profileName,
                         {
-                            color: isDarkMode ? "#fff" : "#000",
+                            color: theme.colors.text,
                         },
                     ]}
                 >
@@ -55,12 +57,11 @@ const styles = StyleSheet.create({
     profileName: {
         fontSize: fontSizes.FONT22,
         fontFamily: "Poppins_500Medium",
-        color: "#000",
     },
     profileEmail: {
         fontSize: fontSizes.FONT17,
         fontFamily: "Poppins_400Regular",
-        color: "#8A8A8A",
+        color: Colors.common.gray,
         width: scale(230),
         overflow: "hidden",
     },

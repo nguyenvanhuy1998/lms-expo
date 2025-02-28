@@ -1,14 +1,8 @@
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    StyleSheet,
-    Animated,
-} from "react-native";
-import React, { useEffect, useRef } from "react";
-import { IsAndroid, IsHaveNotch, IsIPAD } from "@/themes/app.constant";
-import { scale, verticalScale } from "react-native-size-matters";
 import { useTheme } from "@/context/theme.context";
+import { IsAndroid, IsHaveNotch, IsIPAD } from "@/themes/app.constant";
+import React, { useEffect, useRef } from "react";
+import { Animated, StyleSheet, TouchableOpacity } from "react-native";
+import { scale, verticalScale } from "react-native-size-matters";
 
 const ThemeSwitcher = () => {
     const { theme, toggleTheme } = useTheme();
@@ -41,13 +35,19 @@ const ThemeSwitcher = () => {
     });
     const backgroundColor = animatedValue.interpolate({
         inputRange: [0, 1],
-        outputRange: ["#333", "#D9D9D9"], // Dark mode: xám đậm, Light mode: xám nhạt
+        outputRange: ["#333", "#fff"], // Dark mode: xám đậm, Light mode: xám nhạt
     });
     return (
         <Animated.View style={[styles.switcherContainer, { backgroundColor }]}>
             <TouchableOpacity onPress={toggleSwitch} style={styles.touchable}>
                 <Animated.View
-                    style={[styles.circle, { transform: [{ translateX }] }]}
+                    style={[
+                        styles.circle,
+                        {
+                            backgroundColor: theme.colors.primary,
+                            transform: [{ translateX }],
+                        },
+                    ]}
                 />
             </TouchableOpacity>
         </Animated.View>
@@ -76,6 +76,5 @@ const styles = StyleSheet.create({
         width: IsAndroid ? scale(20) : scale(18),
         height: IsAndroid ? scale(20) : scale(18),
         borderRadius: scale(11),
-        backgroundColor: "#6D55FE",
     },
 });

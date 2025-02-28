@@ -21,7 +21,7 @@ const ProfileScreen = () => {
             style={[
                 styles.container,
                 {
-                    backgroundColor: isDarkMode ? "#101010" : "#f5f5f5",
+                    backgroundColor: theme.colors.background,
                 },
             ]}
         >
@@ -30,8 +30,8 @@ const ProfileScreen = () => {
                 style={[
                     styles.profileContainer,
                     {
-                        backgroundColor: theme.dark ? "#121121" : "#fff",
-                        shadowOpacity: theme.dark ? 0.12 : 0.25,
+                        backgroundColor: theme.colors.background,
+                        shadowOpacity: isDarkMode ? 0.12 : 0.25,
                     },
                 ]}
             >
@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
 
     profileContainer: {
         width: scale(320),
-        backgroundColor: "#fff",
         height: IsAndroid
             ? verticalScale(155)
             : !IsHaveNotch

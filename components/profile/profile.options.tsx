@@ -1,13 +1,7 @@
-import {
-    FlatList,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
-import React from "react";
-import { scale, verticalScale } from "react-native-size-matters";
+import { Colors } from "@/constants/colors";
+import { useTheme } from "@/context/theme.context";
+import useUser from "@/hooks/fetch/useUser";
+import { fontSizes } from "@/themes/app.constant";
 import {
     Feather,
     FontAwesome,
@@ -16,9 +10,10 @@ import {
     MaterialIcons,
 } from "@expo/vector-icons";
 import { router } from "expo-router";
-import useUser from "@/hooks/fetch/useUser";
-import { fontSizes } from "@/themes/app.constant";
 import * as SecureStore from "expo-secure-store";
+import React from "react";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { scale, verticalScale } from "react-native-size-matters";
 
 // Component OptionItem (tách ra để tái sử dụng)
 const OptionItem = ({
@@ -34,6 +29,7 @@ const OptionItem = ({
     onPress: () => void;
     isDarkMode: boolean;
 }) => {
+    const { theme } = useTheme();
     return (
         <Pressable onPress={onPress} style={styles.option}>
             <View style={styles.optionRow}>
@@ -42,7 +38,7 @@ const OptionItem = ({
                     <Text
                         style={[
                             styles.optionTitle,
-                            { color: isDarkMode ? "#fff" : "#000" },
+                            { color: theme.colors.text },
                         ]}
                     >
                         {title}
@@ -50,7 +46,7 @@ const OptionItem = ({
                     <Text
                         style={[
                             styles.optionDescription,
-                            { color: isDarkMode ? "#fff" : "#000" },
+                            { color: theme.colors.text },
                         ]}
                     >
                         {description}
@@ -62,6 +58,7 @@ const OptionItem = ({
 };
 const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
     const { user } = useUser();
+    const { theme } = useTheme();
     const handleLogout = async () => {
         await SecureStore.deleteItemAsync("accessToken");
         router.push("/(routes)/onboarding");
@@ -75,7 +72,7 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 <Feather
                     name="book-open"
                     size={scale(21)}
-                    color={isDarkMode ? "#fff" : "#0047AB"}
+                    color={theme.colors.icon}
                 />
             ),
             onPress: () =>
@@ -91,7 +88,7 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 <MaterialIcons
                     name="leaderboard"
                     size={scale(21)}
-                    color={isDarkMode ? "#fff" : "#0047AB"}
+                    color={theme.colors.icon}
                 />
             ),
             onPress: () => {},
@@ -103,7 +100,7 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 <MaterialCommunityIcons
                     name="message-alert-outline"
                     size={scale(21)}
-                    color={isDarkMode ? "#fff" : "#0047AB"}
+                    color={theme.colors.icon}
                 />
             ),
             onPress: () => router.push("/(routes)/my-tickets"),
@@ -115,7 +112,7 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 <FontAwesome
                     name="support"
                     size={scale(21)}
-                    color={isDarkMode ? "#fff" : "#0047AB"}
+                    color={theme.colors.icon}
                 />
             ),
             onPress: () => router.push("/(routes)/support-center"),
@@ -127,7 +124,7 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 <Ionicons
                     name="notifications"
                     size={scale(21)}
-                    color={isDarkMode ? "#fff" : "#0047AB"}
+                    color={theme.colors.icon}
                 />
             ),
             onPress: () => router.push("/(routes)/notification"),
@@ -139,7 +136,7 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 <Ionicons
                     name="settings-sharp"
                     size={scale(21)}
-                    color={isDarkMode ? "#fff" : "#0047AB"}
+                    color={theme.colors.icon}
                 />
             ),
             onPress: () => router.push("/(routes)/settings"),
@@ -151,7 +148,7 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 <MaterialIcons
                     name="policy"
                     size={scale(21)}
-                    color={isDarkMode ? "#fff" : "#0047AB"}
+                    color={theme.colors.icon}
                 />
             ),
             onPress: () => router.push("/(routes)/privacy-policy"),
@@ -163,7 +160,7 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 <MaterialIcons
                     name="logout"
                     size={scale(21)}
-                    color={isDarkMode ? "#fff" : "#0047AB"}
+                    color={theme.colors.icon}
                 />
             ),
             onPress: () => handleLogout(),
@@ -175,7 +172,14 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
             keyExtractor={(item) => item.title}
             showsVerticalScrollIndicator={false}
             data={options}
-            contentContainerStyle={styles.container}
+            contentContainerStyle={[
+                styles.container,
+                {
+                    paddingBottom: isDarkMode
+                        ? verticalScale(80)
+                        : verticalScale(20),
+                },
+            ]}
             renderItem={({ item }) => (
                 <OptionItem {...item} isDarkMode={isDarkMode} />
             )}
@@ -188,13 +192,12 @@ export default ProfileOptions;
 const styles = StyleSheet.create({
     container: {
         padding: scale(20),
-        paddingBottom: 0,
+        gap: scale(20),
     },
     option: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        marginBottom: verticalScale(20),
     },
     optionRow: {
         flexDirection: "row",
@@ -207,7 +210,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderRadius: scale(10),
         borderWidth: 1,
-        borderColor: "#E2DDFF",
+        borderColor: Colors.common.lavenderMist,
     },
     optionTitle: {
         marginLeft: scale(10),
