@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
-import * as SecureStore from "expo-secure-store";
 import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import { useCallback, useEffect, useState } from "react";
 
 export const setAuthorizationHeader = async () => {
     const token = await SecureStore.getItemAsync("accessToken");
