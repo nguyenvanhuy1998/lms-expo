@@ -1,48 +1,56 @@
 import {
-    Animated,
-    StyleSheet,
+    View,
     Text,
     TouchableOpacity,
-    View,
+    StyleSheet,
+    Animated,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { IsAndroid, IsHaveNotch, IsIPAD } from "@/themes/app.constant";
 import { scale, verticalScale } from "react-native-size-matters";
 import { useTheme } from "@/context/theme.context";
 
 const ThemeSwitcher = () => {
     const { theme, toggleTheme } = useTheme();
-    const [isOn, setIsOn] = useState(theme.dark ? false : true);
-    const [animatedValue] = useState(new Animated.Value(theme.dark ? 0 : 1));
+    const animatedValue = useRef(
+        new Animated.Value(theme.dark ? 0 : 1)
+    ).current;
+
+    useEffect(() => {
+        // Cập nhật animation khi theme thay đổi
+        Animated.timing(animatedValue, {
+            toValue: theme.dark ? 0 : 1,
+            duration: 300,
+            useNativeDriver: false,
+        }).start();
+    }, [theme.dark]);
+
     const toggleSwitch = () => {
         Animated.timing(animatedValue, {
-            toValue: isOn ? 0 : 1,
+            toValue: theme.dark ? 1 : 0,
             duration: 300,
             useNativeDriver: false,
         }).start(() => {
             toggleTheme();
         });
-        setIsOn(!isOn);
     };
+
     const translateX = animatedValue.interpolate({
         inputRange: [0, 1],
         outputRange: [2, scale(19)],
     });
-
+    const backgroundColor = animatedValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["#333", "#D9D9D9"], // Dark mode: xám đậm, Light mode: xám nhạt
+    });
     return (
-        <TouchableOpacity
-            onPress={toggleSwitch}
-            style={styles.switcherContainer}
-        >
-            <Animated.View
-                style={[
-                    styles.circle,
-                    {
-                        transform: [{ translateX }],
-                    },
-                ]}
-            />
-        </TouchableOpacity>
+        <Animated.View style={[styles.switcherContainer, { backgroundColor }]}>
+            <TouchableOpacity onPress={toggleSwitch} style={styles.touchable}>
+                <Animated.View
+                    style={[styles.circle, { transform: [{ translateX }] }]}
+                />
+            </TouchableOpacity>
+        </Animated.View>
     );
 };
 
@@ -50,7 +58,6 @@ export default ThemeSwitcher;
 
 const styles = StyleSheet.create({
     switcherContainer: {
-        backgroundColor: "#D9D9D9",
         width: IsAndroid ? scale(44) : scale(42),
         height: !IsHaveNotch
             ? verticalScale(23)
@@ -59,6 +66,10 @@ const styles = StyleSheet.create({
             : verticalScale(20),
         borderRadius: scale(13),
         padding: scale(2),
+        justifyContent: "center",
+    },
+    touchable: {
+        flex: 1,
         justifyContent: "center",
     },
     circle: {
