@@ -14,10 +14,11 @@ const useGetCourses = () => {
                     `${process.env.EXPO_PUBLIC_SERVER_URI}/get-courses`
                 );
                 setCourses(response.data.courses);
-                setLoading(false);
             } catch (error: any) {
                 console.log("error", error);
                 setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
         fetchCourses();

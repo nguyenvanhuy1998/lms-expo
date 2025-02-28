@@ -7,7 +7,7 @@ import useGetCourses from "@/hooks/fetch/useGetCourses";
 import { fontSizes, windowHeight, windowWidth } from "@/themes/app.constant";
 import SkeltonLoader from "@/utils/skelton";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
 
