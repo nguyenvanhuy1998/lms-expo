@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/colors";
 import { useTheme } from "@/context/theme.context";
 import useUser from "@/hooks/fetch/useUser";
 import { fontSizes, IsAndroid, IsIOS, IsIPAD } from "@/themes/app.constant";
@@ -92,7 +93,10 @@ export default function _layout() {
                     style={[
                         StyleSheet.absoluteFillObject,
                         styles.tabBarBackground,
-                        { backgroundColor: "#fff", ...BORDER_RADIUS },
+                        {
+                            backgroundColor: Colors.common.white,
+                            ...BORDER_RADIUS,
+                        },
                     ]}
                 />
             ) : (
@@ -106,12 +110,8 @@ export default function _layout() {
                         {
                             ...BORDER_RADIUS,
                             backgroundColor: IsAndroid
-                                ? theme.dark
-                                    ? "#131313"
-                                    : "#fff"
-                                : theme.dark
-                                ? "transparent"
-                                : "#fff",
+                                ? theme.colors.background
+                                : theme.colors.input,
                         },
                     ]}
                 />
@@ -125,8 +125,8 @@ export default function _layout() {
                 tabBarIcon: ({ color }) => (
                     <TabIcon route={route} color={color} />
                 ),
-                tabBarActiveTintColor: theme.dark ? "#19C964" : "#4A90E2",
-                tabBarInactiveTintColor: theme.dark ? "#fff" : "#8e8e93",
+                tabBarActiveTintColor: theme.colors.activeTab,
+                tabBarInactiveTintColor: theme.colors.tabInactive,
                 headerShown:
                     TAB_CONFIG[route.name as TabRouteName]?.showHeader ?? false,
                 headerTitle:
@@ -134,14 +134,14 @@ export default function _layout() {
                 headerTitleStyle: [
                     styles.headerTitle,
                     {
-                        color: theme.dark ? "#fff" : "#000",
+                        color: theme.colors.text,
                     },
                 ],
                 headerBackgroundContainerStyle: [
                     styles.headerBackground,
                     {
-                        backgroundColor: theme.dark ? "#131313" : "#fff",
-                        shadowColor: theme.dark ? "#fff" : "#000",
+                        backgroundColor: theme.colors.background,
+                        shadowColor: theme.colors.text,
                     },
                 ],
                 headerBackground: headerBackgroundComponent,

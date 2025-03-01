@@ -1,10 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import Swiper from "react-native-swiper";
 import { bannerData } from "@/configs/constants";
+import { Colors } from "@/constants/colors";
 import { IsIPAD } from "@/themes/app.constant";
-import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import * as WebBrowser from "expo-web-browser";
+import React from "react";
+import { Image, Pressable, StyleSheet, View } from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import Swiper from "react-native-swiper";
 const HomeBanner = () => {
     const handlePress = async (url: string) => {
         await WebBrowser.openBrowserAsync(url);
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
         width: scale(8),
         height: scale(8),
         borderRadius: scale(4),
-        backgroundColor: "#C6C7CC",
+        backgroundColor: Colors.common.placeholderGray,
         marginHorizontal: verticalScale(3),
     },
     activeDot: {
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
         height: scale(8),
         borderRadius: scale(4),
         marginHorizontal: verticalScale(3),
-        backgroundColor: "#2467EC",
+        backgroundColor: Colors.common.blue,
     },
 
     slide: {

@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/colors";
 import {
     fontSizes,
     IsIOS,
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
-        shadowColor: "#000",
+        shadowColor: Colors.common.black,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
@@ -210,13 +211,13 @@ const styles = StyleSheet.create({
     title: {
         fontSize: fontSizes.FONT35,
         fontFamily: "Poppins_700Bold",
-        color: "#1A1A1A",
+        color: Colors.common.black,
     },
     subtitle: {
         fontSize: fontSizes.FONT17,
         fontFamily: "Poppins_300Light",
         paddingTop: windowHeight(5),
-        color: "#666666",
+        color: Colors.common.gray,
     },
     socialButtonsContainer: {
         flexDirection: "row",

@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/colors";
 import { useTheme } from "@/context/theme.context";
 import { IsAndroid, IsHaveNotch, IsIPAD } from "@/themes/app.constant";
 import React, { useEffect, useRef } from "react";
@@ -35,7 +36,7 @@ const ThemeSwitcher = () => {
     });
     const backgroundColor = animatedValue.interpolate({
         inputRange: [0, 1],
-        outputRange: ["#333", "#fff"], // Dark mode: xám đậm, Light mode: xám nhạt
+        outputRange: [Colors.common.black, Colors.common.white],
     });
     return (
         <Animated.View style={[styles.switcherContainer, { backgroundColor }]}>

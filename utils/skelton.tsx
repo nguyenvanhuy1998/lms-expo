@@ -4,6 +4,7 @@ import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { windowHeight, windowWidth } from "@/themes/app.constant";
 import { scale, verticalScale } from "react-native-size-matters";
+import { Colors } from "@/constants/colors";
 
 export default function SkeltonLoader() {
     const { theme } = useTheme();
@@ -15,7 +16,9 @@ export default function SkeltonLoader() {
             }}
             style={[styles.container, styles.padded]}
             animate={{
-                backgroundColor: theme.dark ? "transparent" : "#fff",
+                backgroundColor: theme.dark
+                    ? Colors.common.transparent
+                    : Colors.common.white,
             }}
         >
             <Skeleton

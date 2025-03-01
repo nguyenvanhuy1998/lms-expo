@@ -1,11 +1,6 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { LinearGradient } from "expo-linear-gradient";
+import { Colors } from "@/constants/colors";
 import { useTheme } from "@/context/theme.context";
-import { StatusBar } from "expo-status-bar";
 import useUserData from "@/hooks/useUserData";
-import { EvilIcons, Ionicons } from "@expo/vector-icons";
-import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import {
     fontSizes,
     IsAndroid,
@@ -14,21 +9,25 @@ import {
     windowHeight,
     windowWidth,
 } from "@/themes/app.constant";
+import { EvilIcons, Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 const WelcomeHeader = () => {
     const { theme } = useTheme();
     const { name } = useUserData();
+    const { notification, borderSecond, input, text, icon } = theme.colors;
+    const { white } = Colors.common;
     const [notificationLength, setNotificationLength] = useState(0);
-
+    const isDarkMode = theme.dark;
     return (
         <LinearGradient
-            colors={
-                theme.dark
-                    ? ["#3c43485c", "#3c43485c", "#3c43485c"]
-                    : ["#75ABFC", "#0047AB"]
-            }
-            start={theme.dark ? { x: 1, y: 1 } : { x: 1, y: 1 }}
-            end={theme.dark ? { x: 0, y: 1 } : { x: 0, y: 1 }}
+            colors={theme.colors.headerGradient}
+            start={isDarkMode ? { x: 1, y: 1 } : { x: 1, y: 1 }}
+            end={isDarkMode ? { x: 0, y: 1 } : { x: 0, y: 1 }}
             style={styles.headerWrapper}
         >
             <StatusBar style="light" />
@@ -50,20 +49,16 @@ const WelcomeHeader = () => {
                             style={[
                                 styles.notificationWrapper,
                                 {
-                                    backgroundColor: theme.dark
-                                        ? "transparent"
-                                        : "#004FAB",
-                                    borderWidth: theme.dark ? 1 : 0,
-                                    borderColor: theme.dark
-                                        ? "#fff"
-                                        : "transparent",
+                                    backgroundColor: notification,
+                                    borderWidth: isDarkMode ? 1 : 0,
+                                    borderColor: borderSecond,
                                 },
                             ]}
                         >
                             <Ionicons
                                 name="notifications-sharp"
                                 size={scale(25)}
-                                color={"#fff"}
+                                color={white}
                             />
                             <View
                                 style={[
@@ -89,22 +84,20 @@ const WelcomeHeader = () => {
                     style={[
                         styles.inputSearch,
                         {
-                            backgroundColor: theme.dark
-                                ? "transparent"
-                                : "#fff",
-                            borderWidth: theme.dark ? 1 : 0,
-                            borderColor: theme.dark ? "#fff" : "",
-                            color: theme.dark ? "#fff" : "#000",
+                            backgroundColor: input,
+                            borderWidth: isDarkMode ? 1 : 0,
+                            borderColor: borderSecond,
+                            color: text,
                         },
                     ]}
                     placeholder="Search for Topics, Courses"
-                    placeholderTextColor={theme.dark ? "#fff" : "#000"}
+                    placeholderTextColor={text}
                 />
                 <Pressable style={styles.inputSearchIcon}>
                     <EvilIcons
                         name="search"
                         size={IsIPAD ? scale(20) : scale(30)}
-                        color={theme.dark ? "#fff" : "blue"}
+                        color={icon}
                     />
                 </Pressable>
             </View>
@@ -140,12 +133,12 @@ const styles = StyleSheet.create({
     headerTextContainer: {},
     headerText: {
         fontSize: fontSizes.FONT32,
-        color: "#fff",
+        color: Colors.common.white,
         fontFamily: "Poppins_600SemiBold",
     },
     headerSubText: {
         fontSize: fontSizes.FONT22,
-        color: "#fff",
+        color: Colors.common.white,
         fontFamily: "Poppins_400Regular",
     },
     headerNotificationContainer: {
@@ -163,21 +156,21 @@ const styles = StyleSheet.create({
         width: scale(13),
         height: scale(13),
         borderRadius: scale(100),
-        backgroundColor: "#19C964",
+        backgroundColor: Colors.common.green,
         alignItems: "center",
         justifyContent: "center",
     },
     notificationBadgeText: {
         fontSize: fontSizes.FONT14,
-        color: "#fff",
+        color: Colors.common.white,
     },
     inputSearchContainer: {
         position: "relative",
     },
     inputSearch: {
         height: IsHaveNotch ? verticalScale(35) : verticalScale(40),
-        backgroundColor: "#fff",
-        color: "#000",
+        backgroundColor: Colors.common.white,
+        color: Colors.common.black,
         marginTop: verticalScale(12),
         borderRadius: moderateScale(30),
         fontSize: IsIPAD ? fontSizes.FONT15 : fontSizes.FONT18,

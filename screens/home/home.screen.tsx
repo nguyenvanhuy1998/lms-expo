@@ -2,6 +2,7 @@ import CourseCard from "@/components/cards/course.card";
 import GradientText from "@/components/common/gradient.text";
 import HomeBanner from "@/components/home/home.banner";
 import WelcomeHeader from "@/components/home/welcome.header";
+import { Colors } from "@/constants/colors";
 import { useTheme } from "@/context/theme.context";
 import useGetCourses from "@/hooks/fetch/useGetCourses";
 import { fontSizes, windowHeight, windowWidth } from "@/themes/app.constant";
@@ -22,12 +23,7 @@ const SectionHeader = ({
 
     return (
         <View style={styles.sectionHeaderContainer}>
-            <Text
-                style={[
-                    styles.sectionTitle,
-                    { color: theme.dark ? "#fff" : "#000" },
-                ]}
-            >
+            <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
                 {title}
             </Text>
             <GradientText text={gradientTitle} styles={styles.gradientTitle} />
@@ -41,10 +37,7 @@ const DescriptionText = () => {
         <View style={styles.descriptionContainer}>
             <View style={styles.indicatorCircle} />
             <Text
-                style={[
-                    styles.descriptionText,
-                    { color: theme.dark ? "#fff" : "#000" },
-                ]}
+                style={[styles.descriptionText, { color: theme.colors.text }]}
             >
                 Our comprehensive project-based courses
             </Text>
@@ -55,19 +48,15 @@ const DescriptionText = () => {
 const HomeScreen = () => {
     const { theme } = useTheme();
     const { loading, courses } = useGetCourses();
-
+    const isDarkMode = theme.dark;
     return (
         <LinearGradient
-            colors={
-                theme.dark
-                    ? ["#180D41", "#2A2D32", "#131313"]
-                    : ["#fff", "#f7f7f7"]
-            }
+            colors={isDarkMode ? Colors.gradient.dark : Colors.gradient.light}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
             style={[
                 styles.container,
-                { backgroundColor: theme.dark ? "#101010" : "#fff" },
+                { backgroundColor: theme.colors.background },
             ]}
         >
             <WelcomeHeader />
@@ -148,7 +137,7 @@ const styles = StyleSheet.create({
         marginTop: windowHeight(5),
     },
     indicatorCircle: {
-        backgroundColor: "#12BB70",
+        backgroundColor: Colors.common.green,
         width: windowWidth(15),
         height: windowWidth(15),
         borderRadius: 100,
@@ -162,6 +151,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: fontSizes.FONT18,
         marginTop: 20,
-        color: "#666",
+        color: Colors.common.gray,
     },
 });

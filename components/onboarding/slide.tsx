@@ -20,6 +20,7 @@ import {
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Defs, RadialGradient, Rect, Stop, Svg } from "react-native-svg";
 import AuthModal from "../auth/auth.modal";
+import { Colors } from "@/constants/colors";
 
 interface SlideProps {
     slide: onBoardingSlidesTypes;
@@ -70,7 +71,7 @@ const Indicators = memo(
 );
 
 const NextButton = memo(({ onPress }: { onPress: () => void }) => (
-    <LinearGradient colors={["#6D55FE", "#8976FC"]} style={styles.nextButton}>
+    <LinearGradient colors={Colors.gradient.primary} style={styles.nextButton}>
         <Pressable style={styles.nextButtonContent} onPress={onPress}>
             <Text style={styles.nextButtonText}>Next</Text>
         </Pressable>
@@ -139,13 +140,13 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: fontSizes.FONT30,
         fontWeight: "600",
-        color: "#05030D",
+        color: Colors.common.black,
         fontFamily: "Poppins_600SemiBold",
     },
     subtitleText: {
         paddingVertical: verticalScale(4),
         fontSize: fontSizes.FONT18,
-        color: "#3E3B54",
+        color: Colors.common.black,
         fontFamily: "Poppins_300Light",
     },
     indicatorContainer: {
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     activeIndicator: {
         height: verticalScale(7),
         width: scale(35),
-        backgroundColor: "white",
+        backgroundColor: Colors.common.white,
     },
     nextButton: {
         position: "absolute",

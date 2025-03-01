@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import Slide from "@/components/onboarding/slide";
+import Slider from "@/components/onboarding/slider";
+import { onBoardingSlides } from "@/configs/constants";
 import React, { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Slider from "@/components/onboarding/slider";
-import Slide from "@/components/onboarding/slide";
-import { onBoardingSlides } from "@/configs/constants";
 
 export default function OnboardingScreen() {
     const [index, setIndex] = useState(0);
@@ -50,5 +49,3 @@ export default function OnboardingScreen() {
         </GestureHandlerRootView>
     );
 }
-
-const styles = StyleSheet.create({});

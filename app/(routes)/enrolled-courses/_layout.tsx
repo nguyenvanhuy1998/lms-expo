@@ -7,23 +7,17 @@ import { Pressable, StyleSheet, Text } from "react-native";
 import { scale } from "react-native-size-matters";
 
 // Component nút Back
-const BackButton = ({ isDarkMode }: { isDarkMode: boolean }) => (
-    <Pressable style={styles.backButton} onPress={() => router.back()}>
-        <AntDesign
-            name="left"
-            size={scale(20)}
-            color={isDarkMode ? "#fff" : "#005DE0"}
-        />
-        <Text
-            style={[
-                styles.backText,
-                { color: isDarkMode ? "#fff" : "#005DE0" },
-            ]}
-        >
-            Back
-        </Text>
-    </Pressable>
-);
+const BackButton = ({ isDarkMode }: { isDarkMode: boolean }) => {
+    const { theme } = useTheme();
+    return (
+        <Pressable style={styles.backButton} onPress={() => router.back()}>
+            <AntDesign name="left" size={scale(20)} color={theme.colors.icon} />
+            <Text style={[styles.backText, { color: theme.colors.icon }]}>
+                Back
+            </Text>
+        </Pressable>
+    );
+};
 
 const _layout = () => {
     const { theme } = useTheme();
@@ -36,11 +30,11 @@ const _layout = () => {
                 options={{
                     title: "Enrolled Courses",
                     headerTitleStyle: {
-                        color: isDarkMode ? "#fff" : "#000",
+                        color: theme.colors.text,
                         fontSize: fontSizes.FONT22,
                     },
                     headerStyle: {
-                        backgroundColor: isDarkMode ? "#131313" : "#fff",
+                        backgroundColor: theme.colors.background,
                     },
                     headerShadowVisible: true,
                     headerBackVisible: true,
