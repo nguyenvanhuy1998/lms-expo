@@ -7,6 +7,7 @@ export const Colors = {
         lavenderMist: "#E2DDFF",
         transparent: "transparent",
         green: "#19C964",
+        turquoise: "#40E0D0",
         placeholderGray: "#C6C7CC",
     },
     light: {
@@ -25,6 +26,8 @@ export const Colors = {
         notification: "#004FAB",
         icon: "#0047AB",
         input: "#fff",
+        card: "#eaf3fb85",
+        titleCard: "#3E3B54",
     },
     dark: {
         primary: "#6D55FE",
@@ -42,6 +45,8 @@ export const Colors = {
         notification: "transparent",
         icon: "#fff",
         input: "transparent",
+        card: "#3c43485c",
+        titleCard: "#fff",
     },
     gradient: {
         primary: ["#6D55FE", "#8976FC"] as const,
