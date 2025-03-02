@@ -1,10 +1,10 @@
+import { Colors } from "@/constants/colors";
 import { useTheme } from "@/context/theme.context";
-import { StyleSheet, View } from "react-native";
+import { windowHeight, windowWidth } from "@/themes/app.constant";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
-import { windowHeight, windowWidth } from "@/themes/app.constant";
-import { scale, verticalScale } from "react-native-size-matters";
-import { Colors } from "@/constants/colors";
+import { StyleSheet, View } from "react-native";
+import { scale } from "react-native-size-matters";
 
 export default function SkeltonLoader() {
     const { theme } = useTheme();
@@ -58,7 +58,6 @@ const SkeletonRow = ({ colorMode }: { colorMode: "dark" | "light" }) => (
 const Spacer = ({ height = 16 }) => <View style={{ height }} />;
 const styles = StyleSheet.create({
     container: {
-        marginTop: verticalScale(16),
         flex: 1,
         justifyContent: "center",
     },
