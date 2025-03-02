@@ -112,18 +112,28 @@ export const videoLessonsData = [
     },
 ];
 
-export const NotificationsData = [
+export const NotificationsData: NotificationType[] = [
     {
         id: "1",
         title: "New Answer Received",
         message: "You have a new answer in your question",
         status: "Unread",
+        createdAt: new Date("2025-03-02"),
+        creatorId: "1",
+        receiverId: "2",
+        redirect_link: "https://www.google.com",
+        updatedAt: new Date("2025-03-02"),
     },
     {
         id: "2",
         title: "New Reply Received",
         message: "You have a new reply in your support question",
         status: "Unread",
+        createdAt: new Date("2025-03-02"),
+        creatorId: "1",
+        receiverId: "2",
+        redirect_link: "https://www.google.com",
+        updatedAt: new Date("2025-03-02"),
     },
 ];
 
