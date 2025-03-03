@@ -1,7 +1,3 @@
-import { LogBox, StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
-import { ThemeProvider } from "@/context/theme.context";
-import { SplashScreen, Stack } from "expo-router";
 import {
     Poppins_300Light,
     Poppins_400Regular,
@@ -10,6 +6,8 @@ import {
     Poppins_700Bold,
     useFonts,
 } from "@expo-google-fonts/poppins";
+import { SplashScreen, Stack } from "expo-router";
+import React, { useEffect } from "react";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -34,16 +32,12 @@ export default function RootLayout() {
     }
 
     return (
-        <ThemeProvider>
-            <Stack
-                screenOptions={{
-                    headerShown: false,
-                }}
-            >
-                <Stack.Screen name="index" />
-                <Stack.Screen name="(routes)/onboarding/index" />
-                <Stack.Screen name="(routes)/notification/index" />
-            </Stack>
-        </ThemeProvider>
+        <Stack
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
+            <Stack.Screen name="index" />
+        </Stack>
     );
 }
