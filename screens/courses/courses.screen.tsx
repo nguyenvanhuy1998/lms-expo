@@ -11,21 +11,21 @@ import SkeltonLoader from "@/utils/skelton";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { scale, verticalScale } from "react-native-size-matters";
 const CoursesScreen = () => {
     const { theme } = useTheme();
     const { colors, dark } = theme;
     const { courses, loading } = useGetCourses();
     return (
-        <View
-            style={[
-                styles.container,
-                {
-                    backgroundColor: colors.background,
-                },
-            ]}
+        <SafeAreaView
+            edges={["top"]}
+            style={{
+                flex: 1,
+                backgroundColor: colors.background,
+            }}
         >
-            <StatusBar style={dark ? "light" : "dark"} />
+            <StatusBar style={!dark ? "dark" : "light"} />
             {loading ? (
                 <>
                     <SkeltonLoader />
@@ -53,7 +53,7 @@ const CoursesScreen = () => {
                     ListFooterComponent={<FooterView />}
                 />
             )}
-        </View>
+        </SafeAreaView>
     );
 };
 

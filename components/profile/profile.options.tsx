@@ -14,6 +14,7 @@ import * as SecureStore from "expo-secure-store";
 import React from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
+import * as WebBrowser from "expo-web-browser";
 
 // Component OptionItem (tách ra để tái sử dụng)
 const OptionItem = ({
@@ -151,7 +152,11 @@ const ProfileOptions = ({ isDarkMode }: { isDarkMode: boolean }) => {
                     color={theme.colors.icon}
                 />
             ),
-            onPress: () => router.push("/(routes)/privacy-policy"),
+            onPress: async () => {
+                await WebBrowser.openBrowserAsync(
+                    "https://www.becodemy.com/privacy-policy"
+                );
+            },
         },
         {
             title: "Log Out",

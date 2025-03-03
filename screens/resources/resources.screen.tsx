@@ -1,9 +1,10 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { useTheme } from "@/context/theme.context";
-import { videoLessonsData } from "@/configs/constants";
 import SourceCodeCard from "@/components/cards/source.code.card";
+import { videoLessonsData } from "@/configs/constants";
+import { useTheme } from "@/context/theme.context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 import { verticalScale } from "react-native-size-matters";
 const ResourcesScreen = () => {
     const { theme } = useTheme();
@@ -19,6 +20,8 @@ const ResourcesScreen = () => {
                 },
             ]}
         >
+            <StatusBar style={!dark ? "dark" : "light"} />
+
             <View
                 style={{
                     paddingBottom: bottomTabBarHeight - 20,
